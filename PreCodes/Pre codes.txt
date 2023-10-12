@@ -1,0 +1,204 @@
+Linear Regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Sample data (replace this with your own dataset)
+X = np.array([1, 2, 3, 4, 5])  # Independent variable (feature)
+y = np.array([2, 4, 5, 4, 5])  # Dependent variable (target)
+
+# Reshape X into a 2D array if it's a single feature (necessary for Scikit-Learn)
+X = X.reshape(-1, 1)
+
+# Create a linear regression model
+model = LinearRegression()
+
+# Fit the model to the data
+model.fit(X, y)
+
+# Make predictions
+y_pred = model.predict(X)
+
+# Calculate the coefficients
+slope = model.coef_[0]
+intercept = model.intercept_
+
+# Print the coefficients
+print(f"Slope (Coefficient): {slope}")
+print(f"Intercept: {intercept}")
+
+# Plot the data and regression line
+plt.scatter(X, y, label="Data Points")
+plt.plot(X, y_pred, color='red', linewidth=2, label="Regression Line")
+plt.xlabel("Independent Variable (Feature)")
+plt.ylabel("Dependent Variable (Target)")
+plt.legend()
+plt.show()
+
+
+
+
+
+
+Multivariant
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Sample data (replace this with your own dataset)
+X = np.array([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]])  # Independent variables (features)
+y = np.array([3, 5, 7, 9, 11])  # Dependent variable (target)
+
+# Create a linear regression model
+model = LinearRegression()
+
+# Fit the model to the data
+model.fit(X, y)
+
+# Make predictions
+y_pred = model.predict(X)
+
+# Calculate the coefficients (slopes) and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+
+# Print the coefficients
+print("Coefficients (Slopes):", coefficients)
+print("Intercept:", intercept)
+
+# Plot the original data and the regression predictions
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')  # Create a 3D plot
+
+ax.scatter(X[:, 0], X[:, 1], y, c='b', marker='o', label='Data Points')
+ax.scatter(X[:, 0], X[:, 1], y_pred, c='r', marker='x', label='Predictions')
+
+ax.set_xlabel('Feature 1')
+ax.set_ylabel('Feature 2')
+ax.set_zlabel('Target')
+ax.legend()
+plt.title("Multivariate Linear Regression")
+plt.show()
+
+
+linear regression on multi independent variable
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+df = pd.read_excel('/content/new.xlsx')
+
+df = df.values
+x1 = df[:, 0]
+x2 = df[:, 1]
+x3 = df[:, 2]
+y = df[:, 3]
+
+print( "x1 :",x1)
+print("x2 :",x2)
+print("x3 :",x3)
+print("y :" ,y)
+
+x1=x1.reshape(-1,1)
+x2=x2.reshape(-1,1)
+x3=x3.reshape(-1,1)
+
+
+plt.scatter(x1,y)
+plt.scatter(x2,y)
+plt.scatter(x3,y)
+
+
+plt.xlabel("IV")
+plt.ylabel("DV")
+plt.show()
+
+
+SLR1=LinearRegression()
+SLR1.fit(x1,y)
+
+pred1=SLR1.predict(x1)
+
+mse1=mean_squared_error(y,pred1)
+plt.plot(x1,pred1,color='red',marker='*')
+
+print("MSE:",mse1)
+print("intercept",SLR1.intercept_)
+print("slope:",SLR1.coef_)
+
+SLR2=LinearRegression()
+SLR2.fit(x2,y)
+
+pred2=SLR2.predict(x2)
+
+mse2=mean_squared_error(y,pred2)
+plt.plot(x2,pred2,color='green',marker='.')
+
+print("MSE:",mse2)
+print("intercept",SLR2.intercept_)
+print("slope:",SLR2.coef_)
+
+SLR3=LinearRegression()
+SLR3.fit(x3,y)
+
+pred3=SLR3.predict(x3)
+
+mse3=mean_squared_error(y,pred3)
+plt.plot(x3,pred3,color='blue',marker='+')
+
+print("MSE:",mse3)
+print("intercept",SLR3.intercept_)
+print("slope:",SLR3.coef_)
+
+
+
+logistic regression
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import roc_curve, auc
+
+data = load_breast_cancer()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = data.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train_scaled, y_train)
+
+num_iterations = model.n_iter_[0]
+
+y_pred = model.predict(X_test_scaled)
+
+y_prob = model.predict_proba(X_test_scaled)[:, 1]
+
+fpr, tpr, _ = roc_curve(y_test, y_prob)
+roc_auc = auc(fpr, tpr)
+
+print(f"Number of Iterations: {num_iterations}")
+
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc='lower right')
+plt.show()
